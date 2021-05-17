@@ -61,8 +61,8 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
         <Tbody>
           {data.map((material) => {
             return (
-              <Link href={`/material/${material.Name}`}>
-                <Tr key={material.id}>
+              <Link key={material.id} href={`/material/${material.id}`}>
+                <Tr>
                   <Td>{material.Name}</Td>
                   <Td>{material.nummer ? material.nummer : "-"}</Td>
                   <Td>Sorte</Td>
