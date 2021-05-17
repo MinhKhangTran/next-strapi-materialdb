@@ -1,4 +1,5 @@
 import { Box, Button, Flex, Input, Spacer } from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -22,7 +23,9 @@ const Search = () => {
         ></Input>
       </form>
       <Spacer />
-      <Button variant="outline">Neue Hinzufügen</Button>
+      <Button variant="outline">
+        <Link href="/add">Neue Hinzufügen</Link>
+      </Button>
     </Flex>
   );
 };

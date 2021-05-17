@@ -1,7 +1,5 @@
 import Layout from "@/components/Layout";
 import {
-  Box,
-  Heading,
   Table,
   TableCaption,
   Tbody,
@@ -17,8 +15,9 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Search from "@/components/Search";
+import Link from "next/link";
 
-interface IMaterial {
+export interface IMaterial {
   Name: string;
   Rm: number;
   Rp: number;
@@ -62,16 +61,18 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
         <Tbody>
           {data.map((material) => {
             return (
-              <Tr key={material.id}>
-                <Td>{material.Name}</Td>
-                <Td>{material.nummer ? material.nummer : "-"}</Td>
-                <Td>Sorte</Td>
-                <Td isNumeric>{material.emodul}</Td>
-                <Td isNumeric>{material.querkontraktionszahl}</Td>
-                <Td isNumeric>{material.Rp}</Td>
-                <Td isNumeric>{material.Rm}</Td>
-                <Td isNumeric>{material.dichte}</Td>
-              </Tr>
+              <Link href={`/material/${material.Name}`}>
+                <Tr key={material.id}>
+                  <Td>{material.Name}</Td>
+                  <Td>{material.nummer ? material.nummer : "-"}</Td>
+                  <Td>Sorte</Td>
+                  <Td isNumeric>{material.emodul}</Td>
+                  <Td isNumeric>{material.querkontraktionszahl}</Td>
+                  <Td isNumeric>{material.Rp}</Td>
+                  <Td isNumeric>{material.Rm}</Td>
+                  <Td isNumeric>{material.dichte}</Td>
+                </Tr>
+              </Link>
             );
           })}
         </Tbody>
@@ -84,11 +85,12 @@ export default DashboardPage;
 
 export async function getStaticProps() {
   const { data } = await axios(
-    `${process.env.API_ENDPOINT}/materials?_limit=10`
+    `${process.env.API_ENDPOINT}/materials?_sort=created_at:DESC&_limit=10`
   );
   return {
     props: {
       data,
     },
+    revalidate: 1,
   };
 }

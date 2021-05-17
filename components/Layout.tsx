@@ -31,6 +31,7 @@ const Layout = ({
             <Spacer />
 
             <Button
+              variant="ghost"
               colorScheme="green"
               onClick={() => {
                 //@ts-expect-error
