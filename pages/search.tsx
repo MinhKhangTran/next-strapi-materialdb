@@ -18,6 +18,11 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Search from "@/components/Search";
+import { NextApiRequest } from "next";
+import { parseCookie } from "@/utils/parseCookie";
+import { PER_PAGE } from "./dashboard";
+import { API_ENDPOINT } from "config";
+import Pagination from "@/components/Pagination";
 
 interface IMaterial {
   Name: string;
@@ -33,12 +38,22 @@ interface IMaterial {
   id: number;
 }
 
-const DashboardPage = ({ data }: { data: IMaterial[] }) => {
+const DashboardPage = ({
+  data,
+  token,
+  page,
+  totalCount,
+}: {
+  data: IMaterial[];
+  token: string;
+  page: number;
+  totalCount: number;
+}) => {
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    !user && router.push("/");
+    !user && !token && router.push("/");
   });
 
   if (data.length === 0) {
@@ -85,6 +100,7 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
           })}
         </Tbody>
       </Table>
+      {/* <Pagination page={page} total={totalCount} /> */}
     </Layout>
   );
 };
@@ -92,9 +108,11 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
 export default DashboardPage;
 
 export async function getServerSideProps({
-  query: { term },
+  req,
+  query: { term, page = 1 },
 }: {
-  query: { term: string };
+  req: NextApiRequest;
+  query: { term: string; page: number };
 }) {
   const query = qs.stringify({
     _where: {
@@ -102,13 +120,30 @@ export async function getServerSideProps({
     },
   });
   //   console.log(query);
+  const { token } = parseCookie(req);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  //calculate start page
+  const start = +page === 1 ? 0 : (+page - 1) * PER_PAGE;
+  //get total count
+  const { data: totalCount } = await axios(
+    `${API_ENDPOINT}/materials/count`,
+    config
+  );
 
   const { data } = await axios(
-    `${process.env.API_ENDPOINT}/materials?${query}`
+    `${process.env.API_ENDPOINT}/materials?${query}`,
+    config
   );
   return {
     props: {
       data,
+      totalCount,
+      page,
     },
   };
 }

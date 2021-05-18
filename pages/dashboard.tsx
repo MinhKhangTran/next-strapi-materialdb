@@ -16,6 +16,10 @@ import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Search from "@/components/Search";
 import Link from "next/link";
+import { NextApiRequest } from "next";
+import { parseCookie } from "@/utils/parseCookie";
+import { API_ENDPOINT } from "config";
+import Pagination from "@/components/Pagination";
 
 export interface IMaterial {
   Name: string;
@@ -30,13 +34,24 @@ export interface IMaterial {
   wechselfestigkeit: null | number;
   id: number;
 }
+export const PER_PAGE: number = 10;
 
-const DashboardPage = ({ data }: { data: IMaterial[] }) => {
+const DashboardPage = ({
+  data,
+  token,
+  page,
+  totalCount,
+}: {
+  data: IMaterial[];
+  token: string;
+  page: number;
+  totalCount: number;
+}) => {
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    !user && router.push("/");
+    !user && !token && router.push("/");
   });
 
   return (
@@ -48,7 +63,7 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
           <Tr>
             <Th>Name</Th>
             <Th>Nummer</Th>
-            <Th>Sorte</Th>
+            {/* <Th>Sorte</Th> */}
             <Th isNumeric>E-Modul [MPa]</Th>
             <Th isNumeric>
               <Text casing="lowercase">ν [-]</Text>
@@ -65,7 +80,7 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
                 <Tr>
                   <Td>{material.Name}</Td>
                   <Td>{material.nummer ? material.nummer : "-"}</Td>
-                  <Td>Sorte</Td>
+                  {/* <Td>Sorte</Td> */}
                   <Td isNumeric>{material.emodul}</Td>
                   <Td isNumeric>{material.querkontraktionszahl}</Td>
                   <Td isNumeric>{material.Rp}</Td>
@@ -77,20 +92,45 @@ const DashboardPage = ({ data }: { data: IMaterial[] }) => {
           })}
         </Tbody>
       </Table>
+      <Pagination page={page} total={totalCount} />
     </Layout>
   );
 };
 
 export default DashboardPage;
 
-export async function getStaticProps() {
+export async function getServerSideProps({
+  req,
+  query: { page = 1 },
+}: {
+  req: NextApiRequest;
+  query: { page: number };
+}) {
+  const { token } = parseCookie(req);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  //calculate start page
+  const start = +page === 1 ? 0 : (+page - 1) * PER_PAGE;
+  //get total count
+  const { data: totalCount } = await axios(
+    `${API_ENDPOINT}/materials/count`,
+    config
+  );
+
   const { data } = await axios(
-    `${process.env.API_ENDPOINT}/materials?_sort=created_at:DESC&_limit=10`
+    `${API_ENDPOINT}/materials?_sort=created_at:DESC&_limit=${PER_PAGE}&_start=${start}`,
+    config
   );
   return {
     props: {
       data,
+      token,
+      totalCount,
+      page,
     },
-    revalidate: 1,
   };
 }

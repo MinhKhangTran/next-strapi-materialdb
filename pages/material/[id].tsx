@@ -13,7 +13,7 @@ import { parseCookie } from "@/utils/parseCookie";
 import Layout from "@/components/Layout";
 
 const SinglePage = ({ data, token }: { data: IMaterial; token: string }) => {
-  console.log(data);
+  // console.log(data);
 
   return (
     <Layout title="MaterialDB | Ändern/Löschen">
@@ -58,8 +58,14 @@ export async function getServerSideProps({
   params: any;
 }) {
   const { token } = parseCookie(req);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const { data }: { data: IMaterial[] } = await axios(
-    `${API_ENDPOINT}/materials/${params.id}`
+    `${API_ENDPOINT}/materials/${params.id}`,
+    config
   );
 
   return {
