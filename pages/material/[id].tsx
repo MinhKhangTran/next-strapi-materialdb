@@ -1,6 +1,6 @@
 import { Box, Heading } from "@chakra-ui/react";
 import axios from "axios";
-import { API_ENDPOINT } from "config";
+import { API_URL } from "config";
 import {
   GetServerSideProps,
   GetStaticPaths,
@@ -26,7 +26,7 @@ const SinglePage = ({ data, token }: { data: IMaterial; token: string }) => {
 export default SinglePage;
 
 // export const getStaticPaths: GetStaticPaths = async () => {
-//   const { data } = await axios(`${API_ENDPOINT}/materials`);
+//   const { data } = await axios(`${API_URL}/materials`);
 
 //   const paths = data.map((material: IMaterial) => ({
 //     params: { Name: material.Name },
@@ -39,7 +39,7 @@ export default SinglePage;
 
 // export const getStaticProps: GetStaticProps = async (context) => {
 //   const { data }: { data: IMaterial[] } = await axios(
-//     `${API_ENDPOINT}/materials?Name=${context.params?.Name}`
+//     `${API_URL}/materials?Name=${context.params?.Name}`
 //   );
 //   const material = data[0];
 //   return {
@@ -64,7 +64,7 @@ export async function getServerSideProps({
     },
   };
   const { data }: { data: IMaterial[] } = await axios(
-    `${API_ENDPOINT}/materials/${params.id}`,
+    `${API_URL}/materials/${params.id}`,
     config
   );
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "config";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -21,10 +22,7 @@ export default async function handler(
     };
     //read logged user from strapi backend with headers
 
-    const { data } = await axios.get(
-      `${process.env.API_ENDPOINT}/users/me`,
-      config
-    );
+    const { data } = await axios.get(`${API_URL}/users/me`, config);
     // console.log(data);
     res.status(200).json({ data });
   } else {

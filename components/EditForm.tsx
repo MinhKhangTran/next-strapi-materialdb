@@ -14,7 +14,7 @@ import * as Yup from "yup";
 
 import axios from "axios";
 import { useRouter } from "next/dist/client/router";
-import { API_ENDPOINT } from "config";
+import { API_URL } from "config";
 import { IMaterial } from "pages/dashboard";
 
 const ComponentForm = ({
@@ -47,10 +47,7 @@ const ComponentForm = ({
       },
     };
     if (confirm("Bist du sicher?")) {
-      const { data } = await axios.delete(
-        `${API_ENDPOINT}/materials/${id}`,
-        config
-      );
+      const { data } = await axios.delete(`${API_URL}/materials/${id}`, config);
       // console.log(data);
     }
     router.push("/dashboard");
@@ -90,7 +87,7 @@ const ComponentForm = ({
           },
         };
         await axios.put(
-          `${API_ENDPOINT}/materials/${material.id}`,
+          `${API_URL}/materials/${material.id}`,
           {
             Name: daten.Name,
             Rp: Number(daten.Rp),

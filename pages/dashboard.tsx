@@ -19,7 +19,7 @@ import Search from "@/components/Search";
 import Link from "next/link";
 import { NextApiRequest } from "next";
 import { parseCookie } from "@/utils/parseCookie";
-import { API_ENDPOINT } from "config";
+import { API_URL } from "config";
 import Pagination from "@/components/Pagination";
 
 export interface IMaterial {
@@ -149,12 +149,12 @@ export async function getServerSideProps({
   const start = +page === 1 ? 0 : (+page - 1) * PER_PAGE;
   //get total count
   const { data: totalCount } = await axios(
-    `${API_ENDPOINT}/materials/count`,
+    `${API_URL}/materials/count`,
     config
   );
 
   const { data } = await axios(
-    `${API_ENDPOINT}/materials?_sort=created_at:DESC&_limit=${PER_PAGE}&_start=${start}`,
+    `${API_URL}/materials?_sort=created_at:DESC&_limit=${PER_PAGE}&_start=${start}`,
     config
   );
   return {

@@ -15,7 +15,7 @@ import axios from "axios";
 import { useRouter } from "next/dist/client/router";
 import { NextApiRequest } from "next";
 import { parseCookie } from "@/utils/parseCookie";
-import { API_ENDPOINT } from "config";
+import { API_URL } from "config";
 
 const ComponentForm = ({ token }: { token: string }) => {
   const [loading, setLoading] = useState(false);
@@ -66,7 +66,7 @@ const ComponentForm = ({ token }: { token: string }) => {
           },
         };
         await axios.post(
-          `${API_ENDPOINT}/materials`,
+          `${API_URL}/materials`,
           {
             Name: daten.Name,
             Rp: Number(daten.Rp),

@@ -20,6 +20,7 @@ import axios from "axios";
 import Search from "@/components/Search";
 import { NextApiRequest } from "next";
 import { parseCookie } from "@/utils/parseCookie";
+import { API_URL } from "config";
 
 interface IMaterial {
   Name: string;
@@ -121,10 +122,7 @@ export async function getServerSideProps({
     },
   };
 
-  const { data } = await axios(
-    `${process.env.API_ENDPOINT}/materials?${query}`,
-    config
-  );
+  const { data } = await axios(`${API_URL}/materials?${query}`, config);
   return {
     props: {
       data,

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "config";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -16,7 +17,7 @@ export default async function handler(
         },
       };
       const { data, status } = await axios.post(
-        `${process.env.API_ENDPOINT}/auth/local`,
+        `${API_URL}/auth/local`,
         { identifier, password },
         config
       );
