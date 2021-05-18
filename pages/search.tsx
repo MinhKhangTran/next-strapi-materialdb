@@ -20,9 +20,6 @@ import axios from "axios";
 import Search from "@/components/Search";
 import { NextApiRequest } from "next";
 import { parseCookie } from "@/utils/parseCookie";
-import { PER_PAGE } from "./dashboard";
-import { API_ENDPOINT } from "config";
-import Pagination from "@/components/Pagination";
 
 interface IMaterial {
   Name: string;
@@ -41,13 +38,9 @@ interface IMaterial {
 const DashboardPage = ({
   data,
   token,
-  page,
-  totalCount,
 }: {
   data: IMaterial[];
   token: string;
-  page: number;
-  totalCount: number;
 }) => {
   const router = useRouter();
   const { user } = useAuth();
@@ -127,13 +120,6 @@ export async function getServerSideProps({
       Authorization: `Bearer ${token}`,
     },
   };
-  //calculate start page
-  const start = +page === 1 ? 0 : (+page - 1) * PER_PAGE;
-  //get total count
-  const { data: totalCount } = await axios(
-    `${API_ENDPOINT}/materials/count`,
-    config
-  );
 
   const { data } = await axios(
     `${process.env.API_ENDPOINT}/materials?${query}`,
@@ -142,8 +128,6 @@ export async function getServerSideProps({
   return {
     props: {
       data,
-      totalCount,
-      page,
     },
   };
 }

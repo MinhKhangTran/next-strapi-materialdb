@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Input, Spacer } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { IMaterial } from "pages/dashboard";
 import { useState } from "react";
 
 const Search = () => {
