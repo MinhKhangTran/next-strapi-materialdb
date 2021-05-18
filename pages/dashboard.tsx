@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import {
+  Button,
   Table,
   TableCaption,
   Tbody,
@@ -54,10 +55,41 @@ const DashboardPage = ({
     !user && !token && router.push("/");
   });
 
+  //reference to https://stackoverflow.com/questions/56966672/copy-the-html-table-to-clipboard-in-reactjs
+  const copyTable = () => {
+    const chakraTable = document.querySelector("table");
+    let range, sel;
+
+    // Ensure that range and selection are supported by the browsers
+    if (document.createRange && window.getSelection) {
+      range = document.createRange();
+      sel = window.getSelection();
+      // unselect any element in the page
+      sel?.removeAllRanges();
+
+      try {
+        // @ts-expect-error
+        range.selectNodeContents(chakraTable);
+        sel?.addRange(range);
+      } catch (e) {
+        // @ts-expect-error
+        range.selectNode(chakraTable);
+        sel?.addRange(range);
+      }
+
+      document.execCommand("copy");
+    }
+
+    sel?.removeAllRanges();
+
+    console.log("Element Copied! Paste it in a file");
+  };
+
   return (
     <Layout title="MaterialDB | Dashbaord">
       <Search />
-      <Table>
+      <Button onClick={() => copyTable()}>Tabelle kopieren (Beta)</Button>
+      <Table id="table">
         <TableCaption>Datenbank</TableCaption>
         <Thead>
           <Tr>
