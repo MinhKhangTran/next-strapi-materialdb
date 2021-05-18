@@ -51,7 +51,7 @@ const ComponentForm = ({
         `${API_ENDPOINT}/materials/${id}`,
         config
       );
-      console.log(data);
+      // console.log(data);
     }
     router.push("/dashboard");
   };

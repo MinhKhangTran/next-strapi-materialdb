@@ -41,7 +41,7 @@ export default async function handler(
       res.status(405).json({ msg: "Nur Post Methode ist erlaubt" });
     }
   } catch (error) {
-    console.log(error.response.data.message[0].messages[0].message);
+    // console.log(error.response.data.message[0].messages[0].message);
     // console.log(error.response.status);
     // console.log(error.response.headers);
     res

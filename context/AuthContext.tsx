@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push("/dashboard");
     } catch (error) {
       // console.log(error.response);
-      console.log(error.response.data.msg);
+      // console.log(error.response.data.msg);
 
       setLoading(false);
       setError(error.response.data.msg);
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       setUser(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setLoading(false);
 
       setError(null);
